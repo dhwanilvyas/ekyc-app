@@ -4,6 +4,7 @@ import {
   Button,
   type ViewProps,
 } from "react-native";
+import { useMemo, useCallback } from "react";
 
 import { useThemeColor } from "@/stores/themeStore";
 
@@ -28,18 +29,24 @@ export function ThemedButton({
   style,
   ...rest
 }: ThemedButtonProps) {
-  let colorName: "buttonPrimary" | "buttonPrimaryDisabled" | "buttonSecondary" | "buttonSecondaryDisabled";
-
-  if (variant === "primary") {
-    colorName = disabled ? "buttonPrimaryDisabled" : "buttonPrimary";
-  } else {
-    colorName = disabled ? "buttonSecondaryDisabled" : "buttonSecondary";
-  }
+  const colorName = useMemo(() => {
+    if (variant === "primary") {
+      return disabled ? "buttonPrimaryDisabled" : "buttonPrimary";
+    } else {
+      return disabled ? "buttonSecondaryDisabled" : "buttonSecondary";
+    }
+  }, [variant, disabled]);
 
   const buttonColor = useThemeColor(
     { light: lightColor, dark: darkColor },
     colorName,
   );
+
+  const handlePress = useCallback(() => {
+    if (!disabled && onPress) {
+      onPress();
+    }
+  }, [onPress, disabled]);
 
   return (
     <View
@@ -52,7 +59,7 @@ export function ThemedButton({
     >
       <Button
         title={title}
-        onPress={onPress}
+        onPress={handlePress}
         disabled={disabled}
         color={buttonColor}
       />
@@ -69,5 +76,4 @@ const styles = StyleSheet.create({
     width: "100%",
   },
 });
-
 
