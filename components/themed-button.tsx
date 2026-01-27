@@ -13,6 +13,7 @@ export type ThemedButtonProps = ViewProps & {
   title: string;
   onPress?: () => void;
   disabled?: boolean;
+  isLoading?: boolean;
   lightColor?: string;
   darkColor?: string;
   fullWidth?: boolean;
@@ -23,6 +24,7 @@ export function ThemedButton({
   title,
   onPress,
   disabled = false,
+  isLoading = false,
   lightColor,
   darkColor,
   fullWidth = false,
@@ -32,13 +34,16 @@ export function ThemedButton({
 }: ThemedButtonProps) {
   const scheme = useColorScheme() ?? "light";
 
+  const isDisabled = disabled || isLoading;
+  const displayTitle = isLoading ? "Loading..." : title;
+
   const buttonColor = useMemo(() => {
     const colorKey =
       variant === "primary"
-        ? disabled
+        ? isDisabled
           ? "buttonPrimaryDisabled"
           : "buttonPrimary"
-        : disabled
+        : isDisabled
           ? "buttonSecondaryDisabled"
           : "buttonSecondary";
 
@@ -48,13 +53,13 @@ export function ThemedButton({
     }
 
     return Colors[scheme][colorKey as keyof typeof Colors.light];
-  }, [scheme, disabled, variant, lightColor, darkColor]);
+  }, [scheme, isDisabled, variant, lightColor, darkColor]);
 
   const handlePress = useCallback(() => {
-    if (!disabled && onPress) {
+    if (!isDisabled && onPress) {
       onPress();
     }
-  }, [onPress, disabled]);
+  }, [onPress, isDisabled]);
 
   return (
     <View
@@ -66,9 +71,9 @@ export function ThemedButton({
       {...rest}
     >
       <Button
-        title={title}
+        title={displayTitle}
         onPress={handlePress}
-        disabled={disabled}
+        disabled={isDisabled}
         color={buttonColor}
       />
     </View>
