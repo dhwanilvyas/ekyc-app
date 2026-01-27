@@ -14,6 +14,7 @@ export type ThemedButtonProps = ViewProps & {
   lightColor?: string;
   darkColor?: string;
   fullWidth?: boolean;
+  variant?: "primary" | "secondary";
 };
 
 export function ThemedButton({
@@ -23,12 +24,21 @@ export function ThemedButton({
   lightColor,
   darkColor,
   fullWidth = false,
+  variant = "primary",
   style,
   ...rest
 }: ThemedButtonProps) {
+  let colorName: "buttonPrimary" | "buttonPrimaryDisabled" | "buttonSecondary" | "buttonSecondaryDisabled";
+
+  if (variant === "primary") {
+    colorName = disabled ? "buttonPrimaryDisabled" : "buttonPrimary";
+  } else {
+    colorName = disabled ? "buttonSecondaryDisabled" : "buttonSecondary";
+  }
+
   const buttonColor = useThemeColor(
     { light: lightColor, dark: darkColor },
-    "tint",
+    colorName,
   );
 
   return (
@@ -59,4 +69,5 @@ const styles = StyleSheet.create({
     width: "100%",
   },
 });
+
 

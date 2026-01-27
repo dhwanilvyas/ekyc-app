@@ -18,6 +18,11 @@ export const Colors = {
     tabIconSelected: tintColorLight,
     placeholder: '#999999',
     border: '#CCCCCC',
+    // Button colors
+    buttonPrimary: '#0a7ea4',
+    buttonPrimaryDisabled: '#B3D9E8',
+    buttonSecondary: '#F0F0F0',
+    buttonSecondaryDisabled: '#E8E8E8',
   },
   dark: {
     text: '#ECEDEE',
@@ -28,6 +33,11 @@ export const Colors = {
     tabIconSelected: tintColorDark,
     placeholder: '#888888',
     border: '#444444',
+    // Button colors
+    buttonPrimary: '#0A84FF',
+    buttonPrimaryDisabled: '#4A5F7F',
+    buttonSecondary: '#2C2C2C',
+    buttonSecondaryDisabled: '#1A1A1A',
   },
 };
 
