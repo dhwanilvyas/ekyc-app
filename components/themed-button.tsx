@@ -1,88 +1,62 @@
 import {
   StyleSheet,
-  Pressable,
-  Text,
-  type PressableProps,
+  View,
+  Button,
+  type ViewProps,
 } from "react-native";
 
 import { useThemeColor } from "@/stores/themeStore";
 
-export type ThemedButtonProps = PressableProps & {
+export type ThemedButtonProps = ViewProps & {
   title: string;
+  onPress?: () => void;
+  disabled?: boolean;
   lightColor?: string;
   darkColor?: string;
-  lightTextColor?: string;
-  darkTextColor?: string;
   fullWidth?: boolean;
-  variant?: "primary" | "secondary" | "outline";
 };
 
 export function ThemedButton({
   title,
-  style,
+  onPress,
+  disabled = false,
   lightColor,
   darkColor,
-  lightTextColor,
-  darkTextColor,
   fullWidth = false,
-  variant = "primary",
+  style,
   ...rest
 }: ThemedButtonProps) {
-  const backgroundColor = useThemeColor(
+  const buttonColor = useThemeColor(
     { light: lightColor, dark: darkColor },
     "tint",
   );
-  const textColor = useThemeColor(
-    { light: lightTextColor, dark: darkTextColor },
-    "background",
-  );
-  const borderColor = useThemeColor({}, "tint");
-
-  const variantStyles = {
-    primary: {
-      backgroundColor,
-      borderWidth: 0,
-    },
-    secondary: {
-      backgroundColor: useThemeColor({}, "background"),
-      borderWidth: 2,
-      borderColor,
-    },
-    outline: {
-      backgroundColor: "transparent",
-      borderWidth: 2,
-      borderColor,
-    },
-  };
 
   return (
-    <Pressable
+    <View
       style={[
-        styles.button,
-        variantStyles[variant],
+        styles.container,
         fullWidth && styles.fullWidth,
         typeof style !== "function" ? style : undefined,
       ]}
       {...rest}
     >
-      <Text style={[{ color: textColor }, styles.text]}>{title}</Text>
-    </Pressable>
+      <Button
+        title={title}
+        onPress={onPress}
+        disabled={disabled}
+        color={buttonColor}
+      />
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  button: {
-    paddingHorizontal: 16,
-    paddingVertical: 12,
+  container: {
     borderRadius: 8,
-    alignItems: "center",
-    justifyContent: "center",
+    overflow: "hidden",
   },
   fullWidth: {
     width: "100%",
   },
-  text: {
-    fontSize: 16,
-    fontWeight: "600",
-  },
 });
+
