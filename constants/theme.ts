@@ -19,7 +19,7 @@ export const Colors = {
     placeholder: '#999999',
     border: '#CCCCCC',
     // Button colors
-    buttonPrimary: '#0a7ea4',
+    buttonPrimary: '#0052CC',
     buttonPrimaryDisabled: '#B3D9E8',
     buttonSecondary: '#F0F0F0',
     buttonSecondaryDisabled: '#E8E8E8',
