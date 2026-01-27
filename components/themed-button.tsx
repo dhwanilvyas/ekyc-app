@@ -2,11 +2,12 @@ import {
   StyleSheet,
   View,
   Button,
+  useColorScheme,
   type ViewProps,
 } from "react-native";
 import { useMemo, useCallback } from "react";
 
-import { useThemeColor } from "@/stores/themeStore";
+import { Colors } from "@/constants/theme";
 
 export type ThemedButtonProps = ViewProps & {
   title: string;
@@ -29,18 +30,25 @@ export function ThemedButton({
   style,
   ...rest
 }: ThemedButtonProps) {
-  const colorName = useMemo(() => {
-    if (variant === "primary") {
-      return disabled ? "buttonPrimaryDisabled" : "buttonPrimary";
-    } else {
-      return disabled ? "buttonSecondaryDisabled" : "buttonSecondary";
-    }
-  }, [variant, disabled]);
+  const scheme = useColorScheme() ?? "light";
 
-  const buttonColor = useThemeColor(
-    { light: lightColor, dark: darkColor },
-    colorName,
-  );
+  const buttonColor = useMemo(() => {
+    const colorKey =
+      variant === "primary"
+        ? disabled
+          ? "buttonPrimaryDisabled"
+          : "buttonPrimary"
+        : disabled
+          ? "buttonSecondaryDisabled"
+          : "buttonSecondary";
+
+    const colorFromCustom = scheme === "light" ? lightColor : darkColor;
+    if (colorFromCustom) {
+      return colorFromCustom;
+    }
+
+    return Colors[scheme][colorKey as keyof typeof Colors.light];
+  }, [scheme, disabled, variant, lightColor, darkColor]);
 
   const handlePress = useCallback(() => {
     if (!disabled && onPress) {
@@ -76,4 +84,3 @@ const styles = StyleSheet.create({
     width: "100%",
   },
 });
-
