@@ -124,3 +124,9 @@ export async function apiSubmit(accessToken: string, draft: any) {
     status: "RECEIVED",
   };
 }
+
+type AuthedRequest<T> = () => Promise<T>;
+
+export async function makeRequest<T>(fn: AuthedRequest<T>): Promise<T> {
+  return fn();
+}
