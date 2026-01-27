@@ -1,7 +1,7 @@
 import {
   StyleSheet,
-  View,
-  Button,
+  Pressable,
+  Text,
   useColorScheme,
   type ViewProps,
 } from "react-native";
@@ -62,30 +62,46 @@ export function ThemedButton({
   }, [onPress, isDisabled]);
 
   return (
-    <View
+    <Pressable
       style={[
         styles.container,
+        { backgroundColor: buttonColor },
         fullWidth && styles.fullWidth,
+        isDisabled && styles.disabled,
         typeof style !== "function" ? style : undefined,
       ]}
+      onPress={handlePress}
+      disabled={isDisabled}
       {...rest}
     >
-      <Button
-        title={displayTitle}
-        onPress={handlePress}
-        disabled={isDisabled}
-        color={buttonColor}
-      />
-    </View>
+      <Text style={[styles.text, isDisabled && styles.disabledText]}>
+        {displayTitle}
+      </Text>
+    </Pressable>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     borderRadius: 8,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    alignItems: "center",
+    justifyContent: "center",
     overflow: "hidden",
   },
   fullWidth: {
     width: "100%",
+  },
+  text: {
+    fontSize: 16,
+    fontWeight: "600",
+    color: "#fff",
+  },
+  disabled: {
+    opacity: 0.6,
+  },
+  disabledText: {
+    opacity: 0.7,
   },
 });
