@@ -9,7 +9,7 @@ const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
 let currentSession = {
   accessToken: "access_abc",
   refreshToken: "refresh_def",
-  expiresAt: new Date(Date.now() + 5 * 60 * 1000).toISOString(), // 5 mins
+  expiresAt: new Date(Date.now() + 1 * 60 * 1000).toISOString(), // 1 mins
 };
 
 let user = {
@@ -48,7 +48,7 @@ export async function apiLogin(email: string, password: string) {
   currentSession = {
     accessToken: "access_" + Date.now(),
     refreshToken: "refresh_" + Date.now(),
-    expiresAt: new Date(Date.now() + 60 * 1000).toISOString(), // 1 min
+    expiresAt: new Date(Date.now() + 30).toISOString(), // 1 min
   };
 
   return {
@@ -124,6 +124,19 @@ export async function apiSubmit(accessToken: string, draft: any) {
   };
 }
 
-export async function makeRequest(fn: (token: string, params?: any) => void, params?: any) {
-  return fn(currentSession.accessToken, params);
+export async function makeRequest(fn: (token: string, params?: any) => void, params?: any): Promise<any> {
+  try { 
+    const response = await fn(currentSession.accessToken, params);
+    return response;
+  } catch (err: any) {
+    if (err.status === 401) {
+      console.log('error 401')
+      const session = await apiRefresh(currentSession?.refreshToken);
+      const response = await fn(session.accessToken, params);
+      console.log('session', response)
+      return response;
+    }
+
+    throw err;
+  }
 }

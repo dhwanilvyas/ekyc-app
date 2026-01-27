@@ -156,6 +156,7 @@ export const useOnboardingStore = create(
         set((state) => {
           return {
             ...state,
+            currentStep: 0,
             draft: initialDraft
           }
         })

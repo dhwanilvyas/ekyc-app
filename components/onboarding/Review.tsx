@@ -30,6 +30,11 @@ export default function Review() {
                 <ThemedText type="subtitle">Selfie</ThemedText>
                 <Image source={{ uri: "https://img.freepik.com/free-vector/smiling-young-man-illustration_1308-174669.jpg" }} height={100} width={100} />
                 <ThemedView style={{ borderBottomWidth: 1 }} />
+
+                <ThemedText type="subtitle">Address</ThemedText>
+                <ThemedText>Address: {draft.address.addressLine1}</ThemedText>
+                <ThemedText>City: {draft.address.city}</ThemedText>
+                <ThemedText>Country: {draft.address.country}</ThemedText>
             </ThemedView>
         </SafeAreaProvider>
     );
