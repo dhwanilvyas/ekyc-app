@@ -1,6 +1,6 @@
 import { render } from '@testing-library/react-native';
 
-import { ThemedText } from '../themed-text';
+import { ThemedText } from '../ui/themed-text';
 
 describe('<ThemedText />', () => {
   test('Text renders correctly on HomeScreen', () => {

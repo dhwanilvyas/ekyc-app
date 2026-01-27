@@ -8,8 +8,8 @@ import { StatusBar } from "expo-status-bar";
 import "react-native-reanimated";
 import Toast from "react-native-toast-message";
 
+import { useThemeStore } from "@/stores/themeStore";
 import { useEffect } from "react";
-import { useColorScheme } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 
 SplashScreen.preventAutoHideAsync();
@@ -17,7 +17,7 @@ SplashScreen.preventAutoHideAsync();
 const isLoggedIn = false;
 
 export default function RootLayout() {
-  const colorScheme = useColorScheme();
+  const { theme } = useThemeStore();
 
   useEffect(() => {
     setTimeout(() => {
@@ -26,11 +26,12 @@ export default function RootLayout() {
   }, []);
 
   return (
-    <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
+    <ThemeProvider value={theme === "dark" ? DarkTheme : DefaultTheme}>
       <SafeAreaProvider>
         <Stack>
           <Stack.Protected guard={isLoggedIn}>
             <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+            <Stack.Screen name="onboarding" options={{ title: 'Onboarding' }} />
           </Stack.Protected>
           <Stack.Protected guard={!isLoggedIn}>
             <Stack.Screen name="login" options={{ headerShown: false }} />

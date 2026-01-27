@@ -12,10 +12,11 @@ let currentSession = {
   expiresAt: new Date(Date.now() + 5 * 60 * 1000).toISOString(), // 5 mins
 };
 
-const user = {
+let user = {
   id: "USR-001",
   email: "jane.doe@example.com",
   fullName: "Jane Doe",
+  isOnboardingDone: false,
 };
 
 const VALID_EMAIL = "jane.doe@example.com";
@@ -107,10 +108,6 @@ export async function apiSubmit(accessToken: string, draft: any) {
     fieldErrors["profile.fullName"] = "Required";
   }
 
-  if (!draft.document?.documentNumber) {
-    fieldErrors["document.documentNumber"] = "Required";
-  }
-
   if (Object.keys(fieldErrors).length > 0) {
     throw {
       status: 400,
@@ -119,14 +116,14 @@ export async function apiSubmit(accessToken: string, draft: any) {
     } as ApiError;
   }
 
+  user.isOnboardingDone = true;
+
   return {
     submissionId: "SUB-" + Date.now(),
     status: "RECEIVED",
   };
 }
 
-type AuthedRequest<T> = () => Promise<T>;
-
-export async function makeRequest<T>(fn: AuthedRequest<T>): Promise<T> {
-  return fn();
+export async function makeRequest(fn: (token: string, params?: any) => void, params?: any) {
+  return fn(currentSession.accessToken, params);
 }
