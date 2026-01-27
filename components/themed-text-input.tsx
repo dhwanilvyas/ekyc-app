@@ -1,30 +1,38 @@
-import { StyleSheet, TextInput, useColorScheme, type TextInputProps } from 'react-native';
+import {
+  StyleSheet,
+  TextInput,
+  useColorScheme,
+  type TextInputProps,
+} from "react-native";
 
-import { useThemeColor } from '@/hooks/use-theme-color';
+import { useThemeColor } from "@/stores/themeStore";
 
 export type ThemedTextProps = TextInputProps & {
   lightColor?: string;
   darkColor?: string;
-  type?: 'default' | 'title' | 'defaultSemiBold' | 'subtitle' | 'link';
+  type?: "default" | "title" | "defaultSemiBold" | "subtitle" | "link";
 };
 
 export function ThemedTextInput({
   style,
   lightColor,
   darkColor,
-  type = 'default',
+  type = "default",
   ...rest
 }: ThemedTextProps) {
   const scheme = useColorScheme();
-  const color = useThemeColor({ light: lightColor, dark: darkColor }, 'placeholder');
+  const textColor = useThemeColor(
+    { light: lightColor, dark: darkColor },
+    "text",
+  );
+  const placeholderColor = useThemeColor({}, "placeholder");
+  const borderColor = useThemeColor({}, "border");
 
   return (
     <TextInput
-      style={[
-        { color, borderColor: '#ffffff' },
-      ]}
-      placeholderTextColor={color}
-      keyboardAppearance={scheme ?? 'default'}
+      style={[styles[type], { color: textColor, borderColor }, style]}
+      placeholderTextColor={placeholderColor}
+      keyboardAppearance={scheme ?? "default"}
       {...rest}
     />
   );
@@ -32,26 +40,50 @@ export function ThemedTextInput({
 
 const styles = StyleSheet.create({
   default: {
-    borderColor: '#ffffff',
+    width: "100%",
+    fontSize: 16,
     lineHeight: 24,
+    borderWidth: 1,
+    borderRadius: 8,
+    paddingHorizontal: 12,
+    paddingVertical: 10,
   },
   defaultSemiBold: {
+    width: "100%",
     fontSize: 16,
     lineHeight: 24,
-    fontWeight: '600',
+    fontWeight: "600",
+    borderWidth: 1,
+    borderRadius: 8,
+    paddingHorizontal: 12,
+    paddingVertical: 10,
   },
   title: {
+    width: "100%",
     fontSize: 32,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     lineHeight: 32,
+    borderWidth: 1,
+    borderRadius: 8,
+    paddingHorizontal: 12,
+    paddingVertical: 10,
   },
   subtitle: {
+    width: "100%",
     fontSize: 20,
-    fontWeight: 'bold',
+    fontWeight: "bold",
+    borderWidth: 1,
+    borderRadius: 8,
+    paddingHorizontal: 12,
+    paddingVertical: 10,
   },
   link: {
+    width: "100%",
     lineHeight: 30,
     fontSize: 16,
-    color: '#0a7ea4',
+    borderWidth: 1,
+    borderRadius: 8,
+    paddingHorizontal: 12,
+    paddingVertical: 10,
   },
 });
