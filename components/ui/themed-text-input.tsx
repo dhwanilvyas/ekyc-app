@@ -13,6 +13,7 @@ export type ThemedTextProps = TextInputProps & {
   darkColor?: string;
   type?: "default" | "title" | "defaultSemiBold" | "subtitle" | "link";
   error?: string | null;
+  label?: string;
 };
 
 export function ThemedTextInput({
@@ -21,6 +22,7 @@ export function ThemedTextInput({
   darkColor,
   type = "default",
   error = null,
+  label,
   ...rest
 }: ThemedTextProps) {
   const { theme } = useThemeStore();
@@ -33,6 +35,7 @@ export function ThemedTextInput({
 
   return (
     <ThemedView>
+      {label && <ThemedText>{label}</ThemedText>}
       <TextInput
         style={[styles[type], { color: textColor, borderColor }, style]}
         placeholderTextColor={placeholderColor}

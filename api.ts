@@ -6,7 +6,7 @@ export type ApiError = {
   fieldErrors?: Record<string, string>;
 };
 
-const getExpiryTime = () => new Date(Date.now() + 1 * 10 * 1000).toISOString(); // 10 secs
+const getExpiryTime = () => new Date(Date.now() + 1 * 60 * 1000).toISOString(); // 10 secs
 
 const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
 
@@ -65,13 +65,6 @@ export async function apiRefresh(refreshToken: string, retry?: number) {
   await delay(500);
 
   if (retry === 1) {
-    throw {
-      status: 401,
-      message: "Invalid refresh token",
-    } as ApiError;
-  }
-
-  if (refreshToken !== currentSession.refreshToken) {
     throw {
       status: 401,
       message: "Invalid refresh token",

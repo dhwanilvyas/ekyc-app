@@ -1,6 +1,7 @@
 import { ThemedView } from "@/components/ui/themed-view";
 import { DocumentDraft, useOnboardingStore } from "@/stores/onboardingStore";
 import { useEffect, useState } from "react";
+import { ThemedSelect } from "../ui/themed-select";
 import { ThemedTextInput } from "../ui/themed-text-input";
 
 export default function Document() {
@@ -30,8 +31,8 @@ export default function Document() {
             gap: 20,
         }}>
 
-            <ThemedTextInput placeholder="Document type" value={formState.documentType} onChangeText={(val) => handleFormStateChange('documentType', val)} />
-            <ThemedTextInput placeholder="Document number" value={formState.documentNumber} onChangeText={(val) => handleFormStateChange('documentNumber', val)} />
+            <ThemedSelect label="Document type" selectedValue={formState.documentType} onValueChange={(val) => handleFormStateChange('documentType', val)} options={["Document 1", "Document 2"]} />
+            <ThemedTextInput placeholder="Document number" label="Document number" value={formState.documentNumber} onChangeText={(val) => handleFormStateChange('documentNumber', val)} />
         </ThemedView>
     );
 }

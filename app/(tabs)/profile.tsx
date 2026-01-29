@@ -16,7 +16,7 @@ const radioButtons = [
   {
     id: 'light',
     label: 'Light',
-    value: 'Light'
+    value: 'Light',
   },
   {
     id: 'dark',
@@ -48,7 +48,7 @@ export default function Profile() {
         gap: 15,
       }}
     >
-      <ThemedView style={{ alignItems: 'center' }}>
+      <ThemedView style={{ alignItems: 'center', gap: 20 }}>
         <Image source={{ uri: "https://img.freepik.com/free-vector/smiling-young-man-illustration_1308-174669.jpg" }} height={120} width={100} />
         <ThemedText type="title">Hi, {user?.fullName}</ThemedText>
       </ThemedView>

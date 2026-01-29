@@ -1,6 +1,7 @@
 import { ThemedView } from "@/components/ui/themed-view";
 import { AddressDraft, useOnboardingStore } from "@/stores/onboardingStore";
 import { useEffect, useState } from "react";
+import { ThemedSelect } from "../ui/themed-select";
 import { ThemedTextInput } from "../ui/themed-text-input";
 
 export default function Adress() {
@@ -31,9 +32,9 @@ export default function Adress() {
             gap: 20,
         }}>
 
-            <ThemedTextInput placeholder="Line 1" value={formState.addressLine1} onChangeText={(val) => handleFormStateChange('addressLine1', val)} />
-            <ThemedTextInput placeholder="City" value={formState.city} onChangeText={(val) => handleFormStateChange('city', val)} />
-            <ThemedTextInput placeholder="Country" value={formState.country} onChangeText={(val) => handleFormStateChange('country', val)} />
+            <ThemedTextInput label="Line 1" placeholder="Line 1" value={formState.addressLine1} onChangeText={(val) => handleFormStateChange('addressLine1', val)} />
+            <ThemedTextInput label="City" placeholder="City" value={formState.city} onChangeText={(val) => handleFormStateChange('city', val)} />
+            <ThemedSelect label="Country" selectedValue={formState.country} onValueChange={(val) => handleFormStateChange('country', val)} options={["Country 1", "Country 2"]} />    
         </ThemedView>
     );
 }

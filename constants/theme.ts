@@ -18,11 +18,20 @@ export const Colors = {
     tabIconSelected: tintColorLight,
     placeholder: '#999999',
     border: '#CCCCCC',
-    // Button colors
     buttonPrimary: '#0052CC',
     buttonPrimaryDisabled: '#B3D9E8',
     buttonSecondary: '#F0F0F0',
     buttonSecondaryDisabled: '#E8E8E8',
+    stepperActiveLabelColor: "#000000",
+    stepperActiveStepNumColor: "#000000",
+    stepperActiveStepIconBorderColor: "#000000",
+    stepperDisabledStepNumColor: "#ffffff",
+    // setting empty values so that default lib values get applied
+    stepperDisabledStepIconColor: 'grey',
+    stepperCompletedLabelColor: "black",
+    stepperButtonPreviousTextColor: "black",
+    stepperButtonDisabledColor: "lightgray",
+    pickerIconButtonColor: "#000000"
   },
   dark: {
     text: '#ECEDEE',
@@ -33,11 +42,19 @@ export const Colors = {
     tabIconSelected: tintColorDark,
     placeholder: '#888888',
     border: '#444444',
-    // Button colors
     buttonPrimary: '#0A84FF',
     buttonPrimaryDisabled: '#4A5F7F',
     buttonSecondary: '#2C2C2C',
     buttonSecondaryDisabled: '#1A1A1A',
+    stepperActiveLabelColor: "#ffffff",
+    stepperActiveStepNumColor: "#ffffff",
+    stepperActiveStepIconBorderColor: "#ffffff",
+    stepperDisabledStepNumColor: "#ffffff",
+    stepperDisabledStepIconColor: '#888888',
+    stepperCompletedLabelColor: "lightgray",
+    stepperButtonPreviousTextColor: '#ffffff',
+    stepperButtonDisabledColor: "gray",
+    pickerIconButtonColor: "#ffffff"
   },
 };
 

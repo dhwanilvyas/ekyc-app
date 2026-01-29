@@ -7,6 +7,7 @@ import Selfie from "@/components/onboarding/Selfie";
 import { ThemedText } from "@/components/ui/themed-text";
 import { ThemedView } from "@/components/ui/themed-view";
 import { useOnboardingStore } from "@/stores/onboardingStore";
+import { useThemeColor } from "@/stores/themeStore";
 import { router } from "expo-router";
 import { useState } from "react";
 import { ProgressStep, ProgressSteps } from 'react-native-progress-steps';
@@ -16,7 +17,15 @@ export default function Onboarding() {
     const { draft, currentStep, nextStep, prevStep, resetDraft, isValid } = useOnboardingStore();
     const [isSubmitting, setSubmitting] = useState(false);
     const [validationErrors, setValidationErrors] = useState(null);
-
+    const stepperActiveLabelColor = useThemeColor({}, "stepperActiveLabelColor");
+    const stepperActiveStepNumColor = useThemeColor({}, "stepperActiveStepNumColor");
+    const stepperActiveStepIconBorderColor = useThemeColor({}, "stepperActiveStepIconBorderColor");
+    const stepperDisabledStepNumColor = useThemeColor({}, "stepperDisabledStepNumColor");
+    const stepperDisabledStepIconColor = useThemeColor({}, "stepperDisabledStepIconColor");
+    const stepperCompletedLabelColor = useThemeColor({}, "stepperCompletedLabelColor");
+    const stepperButtonPreviousTextColor = useThemeColor({}, "stepperButtonPreviousTextColor");
+    const stepperButtonDisabledColor = useThemeColor({}, "stepperButtonDisabledColor");
+    
     const onSubmit = async () => {
         setSubmitting(true);
 
@@ -41,31 +50,39 @@ export default function Onboarding() {
         }
     }
 
+    const onPrevious = () => {
+        setValidationErrors(null);
+        prevStep();
+    }
+
+    const onNext = () => {
+        setValidationErrors(null);
+        nextStep();
+    }
+
     return (
         <ThemedView style={{ flex: 1 }}>
             {validationErrors && (
-                <ThemedView style={{ padding: 5 }}>
+                <ThemedView style={{ padding: 20, backgroundColor: 'maroon' }}>
                     {Object.keys(validationErrors).map(key => (
-                        <ThemedText style={{ color: 'red' }}>- {key}: {validationErrors[key]}</ThemedText>
+                        <ThemedText key={key}>- {key}: {validationErrors[key]}</ThemedText>
                     ))}
                 </ThemedView>
             )}
-            <ProgressSteps activeStep={currentStep} topOffset={20}>
-                <ProgressStep label="Profile" onNext={nextStep} scrollViewProps={{
-
-                }}>
+            <ProgressSteps activeStep={currentStep} topOffset={20} activeLabelColor={stepperActiveLabelColor} activeStepNumColor={stepperActiveStepNumColor} activeStepIconBorderColor={stepperActiveStepIconBorderColor} disabledStepNumColor={stepperDisabledStepNumColor} disabledStepIconColor={stepperDisabledStepIconColor} completedLabelColor={stepperCompletedLabelColor}>
+                <ProgressStep label="Profile" onNext={onNext}>
                     <Profile />
                 </ProgressStep>
-                <ProgressStep label="Document" onNext={nextStep} onPrevious={prevStep}>
+                <ProgressStep label="Document" onNext={onNext} onPrevious={onPrevious} buttonPreviousTextColor={stepperButtonPreviousTextColor}>
                     <Document />
                 </ProgressStep>
-                <ProgressStep label="Selfie" onNext={nextStep} onPrevious={prevStep}>
+                <ProgressStep label="Selfie" onNext={onNext} onPrevious={onPrevious} buttonPreviousTextColor={stepperButtonPreviousTextColor}>
                     <Selfie />
                 </ProgressStep>
-                <ProgressStep label="Adress" onNext={nextStep} onPrevious={prevStep}>
+                <ProgressStep label="Adress" onNext={onNext} onPrevious={onPrevious} buttonPreviousTextColor={stepperButtonPreviousTextColor}>
                     <Adress />
                 </ProgressStep>
-                <ProgressStep label="Submit" onPrevious={prevStep} onSubmit={onSubmit} buttonFinishDisabled={isSubmitting || !isValid}>
+                <ProgressStep label="Submit" onPrevious={onPrevious} onSubmit={onSubmit} buttonFinishDisabled={isSubmitting || !isValid} buttonPreviousTextColor={stepperButtonPreviousTextColor} buttonDisabledColor={stepperButtonDisabledColor}>
                     <Review />
                 </ProgressStep>
             </ProgressSteps>
