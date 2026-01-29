@@ -1,15 +1,19 @@
+import { router } from "expo-router";
+
 export type ApiError = {
   status: 400 | 401 | 500;
   message: string;
   fieldErrors?: Record<string, string>;
 };
 
+const getExpiryTime = () => new Date(Date.now() + 1 * 10 * 1000).toISOString(); // 10 secs
+
 const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
 
 let currentSession = {
   accessToken: "access_abc",
   refreshToken: "refresh_def",
-  expiresAt: new Date(Date.now() + 1 * 60 * 1000).toISOString(), // 1 mins
+  expiresAt: getExpiryTime(),
 };
 
 let user = {
@@ -48,7 +52,7 @@ export async function apiLogin(email: string, password: string) {
   currentSession = {
     accessToken: "access_" + Date.now(),
     refreshToken: "refresh_" + Date.now(),
-    expiresAt: new Date(Date.now() + 30).toISOString(), // 1 min
+    expiresAt: getExpiryTime(),
   };
 
   return {
@@ -57,8 +61,15 @@ export async function apiLogin(email: string, password: string) {
   };
 }
 
-export async function apiRefresh(refreshToken: string) {
+export async function apiRefresh(refreshToken: string, retry?: number) {
   await delay(500);
+
+  if (retry === 1) {
+    throw {
+      status: 401,
+      message: "Invalid refresh token",
+    } as ApiError;
+  }
 
   if (refreshToken !== currentSession.refreshToken) {
     throw {
@@ -70,7 +81,7 @@ export async function apiRefresh(refreshToken: string) {
   currentSession = {
     ...currentSession,
     accessToken: "access_" + Date.now(),
-    expiresAt: new Date(Date.now() + 60 * 1000).toISOString(),
+    expiresAt: getExpiryTime(),
   };
 
   return currentSession;
@@ -104,8 +115,8 @@ export async function apiSubmit(accessToken: string, draft: any) {
 
   const fieldErrors: Record<string, string> = {};
 
-  if (!draft.profile?.fullName) {
-    fieldErrors["profile.fullName"] = "Required";
+  if (!draft.consents?.termsAccepted) {
+    fieldErrors["consents.termsAccepted"] = "Required";
   }
 
   if (Object.keys(fieldErrors).length > 0) {
@@ -125,16 +136,20 @@ export async function apiSubmit(accessToken: string, draft: any) {
 }
 
 export async function makeRequest(fn: (token: string, params?: any) => void, params?: any): Promise<any> {
-  try { 
+  try {
     const response = await fn(currentSession.accessToken, params);
     return response;
   } catch (err: any) {
     if (err.status === 401) {
-      console.log('error 401')
-      const session = await apiRefresh(currentSession?.refreshToken);
-      const response = await fn(session.accessToken, params);
-      console.log('session', response)
-      return response;
+      try {
+        console.log('error 401')
+        const session = await apiRefresh(currentSession?.refreshToken);
+        const response = await fn(session.accessToken, params);
+        console.log('session', response)
+        return response;
+      } catch (err) {
+        router.navigate('/session-expired')
+      }
     }
 
     throw err;

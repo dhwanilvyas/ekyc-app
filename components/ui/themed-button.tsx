@@ -1,13 +1,13 @@
+import { useCallback, useMemo } from "react";
 import {
-  StyleSheet,
   Pressable,
+  StyleSheet,
   Text,
-  useColorScheme,
   type ViewProps,
 } from "react-native";
-import { useMemo, useCallback } from "react";
 
 import { Colors } from "@/constants/theme";
+import { useThemeStore } from "@/stores/themeStore";
 
 export type ThemedButtonProps = ViewProps & {
   title: string;
@@ -32,7 +32,7 @@ export function ThemedButton({
   style,
   ...rest
 }: ThemedButtonProps) {
-  const scheme = useColorScheme() ?? "light";
+  const { theme } = useThemeStore();
 
   const isDisabled = disabled || isLoading;
   const displayTitle = isLoading ? "Loading..." : title;
@@ -47,13 +47,13 @@ export function ThemedButton({
           ? "buttonSecondaryDisabled"
           : "buttonSecondary";
 
-    const colorFromCustom = scheme === "light" ? lightColor : darkColor;
+    const colorFromCustom = theme === "light" ? lightColor : darkColor;
     if (colorFromCustom) {
       return colorFromCustom;
     }
 
-    return Colors[scheme][colorKey as keyof typeof Colors.light];
-  }, [scheme, isDisabled, variant, lightColor, darkColor]);
+    return Colors[theme][colorKey as keyof typeof Colors.light];
+  }, [theme, isDisabled, variant, lightColor, darkColor]);
 
   const handlePress = useCallback(() => {
     if (!isDisabled && onPress) {

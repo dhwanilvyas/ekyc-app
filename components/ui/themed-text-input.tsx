@@ -1,16 +1,18 @@
 import {
   StyleSheet,
   TextInput,
-  useColorScheme,
-  type TextInputProps,
+  type TextInputProps
 } from "react-native";
 
-import { useThemeColor } from "@/stores/themeStore";
+import { useThemeColor, useThemeStore } from "@/stores/themeStore";
+import { ThemedText } from "./themed-text";
+import { ThemedView } from "./themed-view";
 
 export type ThemedTextProps = TextInputProps & {
   lightColor?: string;
   darkColor?: string;
   type?: "default" | "title" | "defaultSemiBold" | "subtitle" | "link";
+  error?: string | null;
 };
 
 export function ThemedTextInput({
@@ -18,9 +20,10 @@ export function ThemedTextInput({
   lightColor,
   darkColor,
   type = "default",
+  error = null,
   ...rest
 }: ThemedTextProps) {
-  const scheme = useColorScheme();
+  const { theme } = useThemeStore();
   const textColor = useThemeColor(
     { light: lightColor, dark: darkColor },
     "text",
@@ -29,12 +32,15 @@ export function ThemedTextInput({
   const borderColor = useThemeColor({}, "border");
 
   return (
-    <TextInput
-      style={[styles[type], { color: textColor, borderColor }, style]}
-      placeholderTextColor={placeholderColor}
-      keyboardAppearance={scheme ?? "default"}
-      {...rest}
-    />
+    <ThemedView>
+      <TextInput
+        style={[styles[type], { color: textColor, borderColor }, style]}
+        placeholderTextColor={placeholderColor}
+        keyboardAppearance={theme ?? "default"}
+        {...rest}
+      />
+      {error && <ThemedText style={{ color: 'red', display: 'flex' }}>{error}</ThemedText>}
+    </ThemedView>
   );
 }
 

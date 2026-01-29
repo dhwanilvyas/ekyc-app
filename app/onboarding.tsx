@@ -13,7 +13,7 @@ import { ProgressStep, ProgressSteps } from 'react-native-progress-steps';
 import Toast from "react-native-toast-message";
 
 export default function Onboarding() {
-    const { draft, currentStep, nextStep, prevStep, resetDraft } = useOnboardingStore();
+    const { draft, currentStep, nextStep, prevStep, resetDraft, isValid } = useOnboardingStore();
     const [isSubmitting, setSubmitting] = useState(false);
     const [validationErrors, setValidationErrors] = useState(null);
 
@@ -50,8 +50,10 @@ export default function Onboarding() {
                     ))}
                 </ThemedView>
             )}
-            <ProgressSteps activeStep={currentStep}>
-                <ProgressStep label="Profile" onNext={nextStep}>
+            <ProgressSteps activeStep={currentStep} topOffset={20}>
+                <ProgressStep label="Profile" onNext={nextStep} scrollViewProps={{
+
+                }}>
                     <Profile />
                 </ProgressStep>
                 <ProgressStep label="Document" onNext={nextStep} onPrevious={prevStep}>
@@ -63,7 +65,7 @@ export default function Onboarding() {
                 <ProgressStep label="Adress" onNext={nextStep} onPrevious={prevStep}>
                     <Adress />
                 </ProgressStep>
-                <ProgressStep label="Submit" onPrevious={prevStep} onSubmit={onSubmit} buttonFinishDisabled={isSubmitting}>
+                <ProgressStep label="Submit" onPrevious={prevStep} onSubmit={onSubmit} buttonFinishDisabled={isSubmitting || !isValid}>
                     <Review />
                 </ProgressStep>
             </ProgressSteps>

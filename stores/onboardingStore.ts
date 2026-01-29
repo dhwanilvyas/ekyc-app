@@ -38,6 +38,8 @@ export type OnboardingDraft = {
 export type OnboardingStore = {
   draft: OnboardingDraft;
   currentStep: number;
+  isValid: boolean;
+  inProgress: boolean;
 
   updateProfile: (patch: ProfileDraft) => void;
   updateDocument: (patch: DocumentDraft) => void;
@@ -70,7 +72,7 @@ const initialDraft = {
   },
   consents: {
     termsAccepted: false
-  }
+  },
 }
 
 export const useOnboardingStore = create(
@@ -78,13 +80,16 @@ export const useOnboardingStore = create(
     (set) => ({
       draft: initialDraft,
       currentStep: 0,
+      isValid: false,
+      inProgress: false,
       updateProfile: (patch) => {
         set((state) => {
           return {
             ...state,
+            inProgress: true,
             draft: {
               ...state.draft,
-              profile: patch
+              profile: patch,
             }
           };
         });
@@ -93,6 +98,7 @@ export const useOnboardingStore = create(
         set((state) => {
           return {
             ...state,
+            inProgress: true,
             draft: {
               ...state.draft,
               document: patch
@@ -104,6 +110,7 @@ export const useOnboardingStore = create(
         set((state) => {
           return {
             ...state,
+            inProgress: true,
             draft: {
               ...state.draft,
               selfie: patch
@@ -115,6 +122,7 @@ export const useOnboardingStore = create(
         set((state) => {
           return {
             ...state,
+            inProgress: true,
             draft: {
               ...state.draft,
               address: patch
@@ -126,6 +134,7 @@ export const useOnboardingStore = create(
         set((state) => {
           return {
             ...state,
+            inProgress: true,
             draft: {
               ...state.draft,
               consents: patch
@@ -138,7 +147,9 @@ export const useOnboardingStore = create(
         set((state) => {
           return {
             ...state,
-            currentStep: state.currentStep + 1
+            currentStep: state.currentStep + 1,
+            isValid: getIsValid(state.draft),
+            inProgress: true,
           }
         })
       },
@@ -147,7 +158,9 @@ export const useOnboardingStore = create(
         set((state) => {
           return {
             ...state,
-            currentStep: state.currentStep - 1
+            currentStep: state.currentStep - 1,
+            isValid: getIsValid(state.draft),
+            inProgress: true,
           }
         })
       },
@@ -157,7 +170,9 @@ export const useOnboardingStore = create(
           return {
             ...state,
             currentStep: 0,
-            draft: initialDraft
+            draft: initialDraft,
+            isValid: false,
+            inProgress: false,
           }
         })
       },
@@ -165,11 +180,15 @@ export const useOnboardingStore = create(
     {
       name: "onboarding-store",
       storage: createJSONStorage(() => ({
-            setItem: (key: string, value: string) =>
-              AsyncStorage.setItem(key, value),
-            getItem: (key: string) => AsyncStorage.getItem(key),
-            removeItem: (key: string) => AsyncStorage.removeItem(key),
-          })),
+        setItem: (key: string, value: string) =>
+          AsyncStorage.setItem(key, value),
+        getItem: (key: string) => AsyncStorage.getItem(key),
+        removeItem: (key: string) => AsyncStorage.removeItem(key),
+      })),
     },
   ),
 );
+
+const getIsValid = (draft: OnboardingDraft) => {
+  return Boolean(draft?.profile?.fullName && draft?.profile?.dateOfBirth && draft?.profile?.nationality && draft?.document?.documentNumber && draft?.document?.documentType && draft?.selfie?.hasSelfie && draft?.address?.addressLine1 && draft?.address?.city && draft?.address?.country)
+}
